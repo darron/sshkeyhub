@@ -2,6 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'oauth2' # ~> 0.5.0
 require 'json'
+require 'sshkey'
 
 def client
   OAuth2::Client.new(ENV['SSHKEYHUB_ID'], ENV['SSHKEYHUB_SECRET'],
@@ -26,7 +27,12 @@ get '/auth/github/callback' do
     access_token = client.auth_code.get_token(params[:code], :redirect_uri => redirect_uri)
     @user = JSON.parse(access_token.get('/user').body)
     @login = @user['login']
-    @keys = JSON.parse(access_token.get("/users/#{@login}/keys").body)
+    keys_hash = JSON.parse(access_token.get("/users/#{@login}/keys").body)
+    @keys = Hash.new
+    keys_hash.each do |key|
+      fingerprint = SSHKey.md5_fingerprint(key['key'])
+      @keys["#{fingerprint}"] = key['key']
+    end
     erb :success
   rescue OAuth2::Error => e
     @error = "Oops - please try again."

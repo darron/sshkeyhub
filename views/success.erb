@@ -10,13 +10,14 @@
 
 <body>
 
-<h1><%= @user['login'] %></h1>
+<h1>Connecting <a href="mailto:<%= @user['email'] %>"><%= @user['email'] %></a> to <a href="<%= @user['html_url'] %>"><%= @user['login'] %></a></h1>
 <img src="<%= @user['avatar_url'] %>" />
-<p><a href="mailto:<%= @user['email'] %>"><%= @user['email'] %></a></p>
 
-<p>Your extended profile data: <%= @user.inspect %></p>
-
-<p>Your keys are <%= @keys.inspect %>.</p>
+<p>Your keys are:</p>
+<% @keys.each do |k,v| %>
+<p><strong>MD5 Fingerprint:</strong> <%= k %><br/>
+<strong>Key:</strong> <%= v %></p>
+<% end %>
 
 </body>
 </html>
