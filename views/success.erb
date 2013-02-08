@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>sshkeyhub success</title>
+	<link rel="stylesheet" href="/css/zocial.css" type="text/css" media="screen" title="no title" charset="utf-8">
+</head>
+
+<body>
+
+<h1><%= @user['login'] %></h1>
+<img src="<%= @user['avatar_url'] %>" />
+<p><a href="mailto:<%= @user['email'] %>"><%= @user['email'] %></a></p>
+
+<p>Your extended profile data: <%= @user.inspect %></p>
+
+<p>Your keys are <%= @keys.inspect %>.</p>
+
+</body>
+</html>

@@ -15,12 +15,11 @@ def client
 end
 
 get "/" do
-  %(<p>Update the <code>#new_client</code> method in the sinatra app and <a href="/auth/github">try to authorize</a>.</p>)
+  erb :index
 end
 
 get '/auth/github' do
   url = client.auth_code.authorize_url(:redirect_uri => redirect_uri, :scope => 'user')
-  puts "Redirecting to URL: #{url.inspect}"
   redirect url
 end
 
@@ -28,12 +27,13 @@ get '/auth/github/callback' do
   puts params[:code]
   begin
     access_token = client.auth_code.get_token(params[:code], :redirect_uri => redirect_uri)
-    user = JSON.parse(access_token.get('/user').body)
-    login = user['login']
-    keys = JSON.parse(access_token.get("/users/#{login}/keys").body)
-    "<p>Your OAuth access token: #{access_token.token}</p><p>Your extended profile data:\n#{user.inspect}</p><p>Your keys are\n#{keys.inspect}.</p>"
+    @user = JSON.parse(access_token.get('/user').body)
+    @login = @user['login']
+    @keys = JSON.parse(access_token.get("/users/#{@login}/keys").body)
+    erb :success
   rescue OAuth2::Error => e
-    %(<p>Outdated ?code=#{params[:code]}:</p><p>#{$!}</p><p><a href="/auth/github">Retry</a></p>)
+    @error = "Oops - please try again."
+    erb :index
   end
 end
 
