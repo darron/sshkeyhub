@@ -32,6 +32,7 @@ GEM
     rack (1.5.2)
     rack-protection (1.3.2)
       rack
+    redis (3.0.2)
     shotgun (0.9)
       rack (>= 1.0)
     sinatra (1.3.4)
@@ -52,6 +53,7 @@ DEPENDENCIES
   json
   oauth2
   octokit
+  redis
   shotgun
   sinatra
   sshkey

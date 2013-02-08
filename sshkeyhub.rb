@@ -3,6 +3,7 @@ require 'sinatra'
 require 'oauth2' # ~> 0.5.0
 require 'json'
 require 'sshkey'
+require 'redis'
 
 def client
   OAuth2::Client.new(ENV['SSHKEYHUB_ID'], ENV['SSHKEYHUB_SECRET'],
@@ -36,7 +37,9 @@ get '/auth/github/callback' do
     access_token = client.auth_code.get_token(params[:code], :redirect_uri => redirect_uri)
     @user = JSON.parse(access_token.get('/user').body)
     @login = @user['login']
-    keys_hash = JSON.parse(access_token.get("/users/#{@login}/keys").body)
+    link_email_to_login(@user['email'], @login)
+    keys_hash = get_keys_hash_from_login(@login, access_token)
+    #keys_hash = JSON.parse(access_token.get("/users/#{@login}/keys").body)
     @keys = keys_to_fingerprint(keys_hash)
     @page_title = "Linked!"
     erb :success
@@ -47,8 +50,13 @@ get '/auth/github/callback' do
   end
 end
 
-def link_email_to_user(email, user)
-  
+def link_email_to_login(email, login)
+  redis = Redis.new
+  redis.set(email, login)
+end
+
+def get_keys_hash_from_login(login, access_token)
+  keys_hash = JSON.parse(access_token.get("/users/#{login}/keys").body)
 end
 
 def keys_to_fingerprint(keys_hash)
