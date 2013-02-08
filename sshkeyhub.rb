@@ -13,6 +13,7 @@ def client
 end
 
 get "/" do
+  @page_title = "Click to link your Github SSH keys to an email address."
   erb :index
 end
 
@@ -33,9 +34,11 @@ get '/auth/github/callback' do
       fingerprint = SSHKey.md5_fingerprint(key['key'])
       @keys["#{fingerprint}"] = key['key']
     end
+    @page_title = "Linked!"
     erb :success
   rescue OAuth2::Error => e
     @error = "Oops - please try again."
+    @page_title = "Oops."
     erb :index
   end
 end
