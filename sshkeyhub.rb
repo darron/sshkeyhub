@@ -22,6 +22,14 @@ get '/auth/github' do
   redirect url
 end
 
+# Search for the public key - render text only.
+get '/:email' do
+  # Clean up email params.
+  # Search for name via email.
+  # Display keys with fingerprint.
+  # Else - display nothing.
+end
+
 get '/auth/github/callback' do
   puts params[:code]
   begin
@@ -29,11 +37,7 @@ get '/auth/github/callback' do
     @user = JSON.parse(access_token.get('/user').body)
     @login = @user['login']
     keys_hash = JSON.parse(access_token.get("/users/#{@login}/keys").body)
-    @keys = Hash.new
-    keys_hash.each do |key|
-      fingerprint = SSHKey.md5_fingerprint(key['key'])
-      @keys["#{fingerprint}"] = key['key']
-    end
+    @keys = keys_to_fingerprint(keys_hash)
     @page_title = "Linked!"
     erb :success
   rescue OAuth2::Error => e
@@ -41,6 +45,19 @@ get '/auth/github/callback' do
     @page_title = "Oops."
     erb :index
   end
+end
+
+def link_email_to_user(email, user)
+  
+end
+
+def keys_to_fingerprint(keys_hash)
+  keys = Hash.new
+  keys_hash.each do |key|
+    fingerprint = SSHKey.md5_fingerprint(key['key'])
+    keys["#{fingerprint}"] = key['key']
+  end
+  keys
 end
 
 def redirect_uri(path = '/auth/github/callback', query = nil)
