@@ -1,8 +1,8 @@
-<h1>Connecting <a href="mailto:<%= @user['email'] %>"><%= @user['email'] %></a> to <a href="<%= @user['html_url'] %>"><%= @user['login'] %></a></h1>
-<img src="<%= @user['avatar_url'] %>" />
+<img src="<%= @user['avatar_url'] %>" align="left" style="float:left;margin:20px;" />
+<h1>Connecting</h1>
+<h2><a href="mailto:<%= @user['email'] %>"><%= @user['email'] %></a> to <a href="<%= @user['html_url'] %>"><%= @user['login'] %></a></h2>
 
 <p>Your keys are:</p>
 <% @keys.each do |k,v| %>
-<p><strong>MD5 Fingerprint:</strong> <%= k %><br/>
-<strong>Key:</strong> <%= v %></p>
+<p><strong>MD5 Fingerprint:</strong> <%= k %></p>
 <% end %>
