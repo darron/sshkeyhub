@@ -1,6 +1,3 @@
-# 1. register your application https://github.com/account/applications/new
-# 2. set client_id and client_secret for OAuth2::Client.new
-
 require 'rubygems'
 require 'sinatra'
 require 'oauth2' # ~> 0.5.0
