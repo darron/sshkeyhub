@@ -4,6 +4,7 @@ require 'oauth2' # ~> 0.5.0
 require 'json'
 require 'sshkey'
 require 'redis'
+require 'httparty'
 
 def client
   OAuth2::Client.new(ENV['SSHKEYHUB_ID'], ENV['SSHKEYHUB_SECRET'],
@@ -26,9 +27,21 @@ end
 # Search for the public key - render text only.
 get '/:email' do
   # Clean up email params.
+  email = params[:email]
+  
   # Search for name via email.
+  login = get_login_from_email(email)
+  
   # Display keys with fingerprint.
-  # Else - display nothing.
+  unless login.nil?
+    keys_hash = HTTParty.get("https://api.github.com/users/#{login}/keys")
+    @keys = keys_to_fingerprint(JSON.parse(keys_hash.body))
+    erb :keys, :layout => false
+  else
+    # Else - display nothing.
+    "No keys found"
+  end
+  
 end
 
 get '/auth/github/callback' do
@@ -78,6 +91,11 @@ def get_emails_from_login(login, access_token)
     end
   end
   good_emails
+end
+
+def get_login_from_email(email)
+  redis = Redis.new
+  login = redis.get(email)
 end
 
 def keys_to_fingerprint(keys_hash)
