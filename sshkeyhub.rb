@@ -35,12 +35,20 @@ get '/auth/github/callback' do
   puts params[:code]
   begin
     access_token = client.auth_code.get_token(params[:code], :redirect_uri => redirect_uri)
+
+    # Get the login and emails
     @user = JSON.parse(access_token.get('/user').body)
     @login = @user['login']
-    link_email_to_login(@user['email'], @login)
+    @emails = Array.new
+    @emails << get_emails_from_login(@login, access_token)
+
+    # Get the keys and fingerprint them.
     keys_hash = get_keys_hash_from_login(@login, access_token)
-    #keys_hash = JSON.parse(access_token.get("/users/#{@login}/keys").body)
     @keys = keys_to_fingerprint(keys_hash)
+
+    # Link email addresses to login in Redis.
+    link_email_to_login(@emails, @login)
+
     @page_title = "Linked!"
     erb :success
   rescue OAuth2::Error => e
@@ -50,13 +58,26 @@ get '/auth/github/callback' do
   end
 end
 
-def link_email_to_login(email, login)
+def link_email_to_login(emails, login)
   redis = Redis.new
-  redis.set(email, login)
+  emails.flatten.each do |email|
+    redis.set(email, login)
+  end
 end
 
 def get_keys_hash_from_login(login, access_token)
   keys_hash = JSON.parse(access_token.get("/users/#{login}/keys").body)
+end
+
+def get_emails_from_login(login, access_token)
+  good_emails = Array.new
+  emails = JSON.parse(access_token.get("/user/emails", :headers => {'Accept' => 'application/vnd.github.v3'}).body)
+  emails.each do |email|
+    if email['verified'] == true
+      good_emails << email['email']
+    end
+  end
+  good_emails
 end
 
 def keys_to_fingerprint(keys_hash)
