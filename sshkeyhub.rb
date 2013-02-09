@@ -72,7 +72,8 @@ get '/auth/github/callback' do
 end
 
 def link_email_to_login(emails, login)
-  redis = Redis.new
+  uri = URI.parse(ENV["REDISTOGO_URL"])
+  redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
   emails.flatten.each do |email|
     redis.set(email, login)
   end
@@ -94,7 +95,8 @@ def get_emails_from_login(login, access_token)
 end
 
 def get_login_from_email(email)
-  redis = Redis.new
+  uri = URI.parse(ENV["REDISTOGO_URL"])
+  redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
   login = redis.get(email)
 end
 
