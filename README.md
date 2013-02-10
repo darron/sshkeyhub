@@ -13,7 +13,7 @@ We never store any of your private information, the Github login is handled via 
 
 How does it work?
 -----------------
-First - [sign into Github](http://sskeyhub.org/auth/github).
+First - [sign into Github](http://sshkeyhub.org/auth/github).
 
 Then, put your email address at the end of the URL - your keys will be downloaded - as an example:
 
