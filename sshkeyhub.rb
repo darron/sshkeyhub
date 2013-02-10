@@ -76,6 +76,7 @@ def link_email_to_login(emails, login)
   redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
   emails.flatten.each do |email|
     redis.set(email, login)
+    puts "Linking #{login} to #{email}"
   end
 end
 
