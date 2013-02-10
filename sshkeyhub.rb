@@ -15,7 +15,7 @@ def client
 end
 
 get "/" do
-  @page_title = "Click to link your Github SSH keys to an email address."
+  @page_title = "webfinger for Github public ssh keys"
   erb :index
 end
 
