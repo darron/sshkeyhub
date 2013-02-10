@@ -10,4 +10,4 @@
 <% @keys.each do |k,v| %>
 <p><strong>MD5 Fingerprint:</strong> <%= k %></p>
 <% end %>
-<p><a href="/<%= @emails.first %>">Download Keys</p>
+<p><a href="/<%= @emails.flatten.first %>">Download Keys</p>
