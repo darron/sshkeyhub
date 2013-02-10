@@ -8,6 +8,7 @@ gem "thin"
 gem "sshkey"
 gem "redis"
 gem "httparty"
+gem "email_veracity"
 
 group :development do
   gem "shotgun"

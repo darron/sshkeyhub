@@ -5,6 +5,7 @@ require 'json'
 require 'sshkey'
 require 'redis'
 require 'httparty'
+require 'email_veracity'
 
 def client
   OAuth2::Client.new(ENV['SSHKEYHUB_ID'], ENV['SSHKEYHUB_SECRET'],
@@ -28,9 +29,14 @@ end
 get '/:email' do
   # Clean up email params.
   email = params[:email]
+  address = EmailVeracity::Address.new(email)
   
   # Search for name via email.
-  login = get_login_from_email(email)
+  if address.valid?
+     login = get_login_from_email(email)
+  else
+    puts "Not a valid email address: #{email}"
+  end  
   
   # Display keys with fingerprint.
   unless login.nil?

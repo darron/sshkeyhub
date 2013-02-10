@@ -3,6 +3,7 @@ GEM
   specs:
     addressable (2.3.2)
     daemons (1.1.9)
+    email_veracity (0.6.0)
     eventmachine (1.0.0)
     faraday (0.8.5)
       multipart-post (~> 1.1)
@@ -54,6 +55,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  email_veracity
   httparty
   json
   oauth2
