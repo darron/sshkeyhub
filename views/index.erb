@@ -8,7 +8,13 @@
 <p>This is just a way to associate an email address with a Github username. With a Github username, your public ssh keys can be downloaded easily.</p>
 
 <h3>Is this safe?</h3>
-<p>We never store any of your private information, the Github login is handled via oAuth. We only store your verified email addresses and the associated login. <a href="https://github.com/darron/sshkeyhub">Or just take a look at the source yourself.</a></p>
+<p>We never store any of your private information:</p>
+
+<ol>
+  <li>The Github login is handled via oAuth.</li>
+  <li>We store a hash of your verified email addresses and the associated login. We do not store the email address itself.</li>
+  <li><a href="https://github.com/darron/sshkeyhub">Or just take a look at the source yourself.</a></li>
+</ol>
 
 <h3>How does it work?</h3>
 <p>First - <a href="/auth/github">click the button above and sign into Github.</a></p>

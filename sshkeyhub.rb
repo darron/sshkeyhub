@@ -6,6 +6,7 @@ require 'sshkey'
 require 'redis'
 require 'httparty'
 require 'email_veracity'
+require "digest/sha1"
 
 def client
   OAuth2::Client.new(ENV['SSHKEYHUB_ID'], ENV['SSHKEYHUB_SECRET'],
@@ -33,7 +34,8 @@ get '/:email' do
   
   # Search for name via email.
   if address.valid?
-     login = get_login_from_email(email)
+    hash_email = Digest::SHA1.hexdigest(email)
+    login = get_login_from_email(hash_email)
   else
     puts "Not a valid email address: #{email}"
   end  
@@ -81,8 +83,9 @@ def link_email_to_login(emails, login)
   uri = URI.parse(ENV["REDISTOGO_URL"])
   redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
   emails.flatten.each do |email|
-    redis.set(email, login)
-    puts "Linking #{login} to #{email}"
+    hash_email = Digest::SHA1.hexdigest(email)
+    redis.set(hash_email, login)
+    puts "Linking #{login} to #{email} via #{hash_email}"
   end
 end
 
