@@ -9,7 +9,8 @@ This is just a way to associate an email address with a Github username. With a 
 Is this safe?
 -------------
 
-We never store any of your private information, the Github login is handled via oAuth. We only store your verified email addresses and the associated login. And no - we won't do anything with your email address.
+1. We never store any of your private information, the Github login is handled via oAuth.
+2. We store a hash of your verified email addresses and the associated login. We do not store the email address itself.
 
 How does it work?
 -----------------
