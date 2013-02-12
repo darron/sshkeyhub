@@ -6,6 +6,8 @@ What is this?
 
 This is just a way to associate an email address with a Github username. With a Github username, your public ssh keys can be downloaded easily.
 
+NOTE: February 11, 2013 - apparently links like this work: [https://github.com/darron.keys](https://github.com/darron.keys) - that's even better.
+
 Is this safe?
 -------------
 
